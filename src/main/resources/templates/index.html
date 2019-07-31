@@ -7,19 +7,52 @@
     <div th:insert="module/head :: style"></div>
     <link rel="stylesheet" href="https://cdn.bootcss.com/animate.css/3.5.2/animate.min.css">
     <link rel="stylesheet" href="/personage/modoul/dist/rmodal-no-bootstrap.css" type="text/css" />
+    <link rel="stylesheet" href="/plugins/layui-v2.5.4/layui/css/layui.css"  media="all">
 </head>
 <body>
     <div th:insert="module/navHead :: nav"></div>
 
+    <div class="row" style="margin: 50px 100px; border: 2px solid #f8f8f8">
+        <div class="col-md-9">
+            <div class="media" style="margin-top: 20px">
+                <div class="media-body" >
+                    <h2 class="media-heading"><span class="glyphicon glyphicon-th-list"></span> 问题</h2>
+                    <hr>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="media" style="margin-top: 20px">
+                <div class="media-body" >
+                    <h2 class="media-heading">最新问题</h2>
+                    <hr>
+
+                </div>
+            </div>
+
+            <div class="media" style="margin-top: 20px">
+                <div class="media-body" >
+                    <h2 class="media-heading">热门问题</h2>
+                    <hr>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!--================================================================-->
     <!--模态窗口-->
     <div id="modal" class="modal">
         <div class="modal-dialog animated" style="width: 600px;">
             <div class="modal-content">
-                <form class="form-horizontal" method="get">
+                <form class="form-horizontal" action="/form/login" method="post">
                     <div class="modal-header">
                         <strong>登录</strong>
                     </div>
-
                     <div class="modal-body" style="width: 500px;">
                         <div class="form-group">
                             <label for="email" class="control-label col-xs-4">邮箱</label>
@@ -34,15 +67,25 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="modal-footer">
                         <button class="btn btn-default" type="button" onclick="modal.close();">取消</button>
-                        <button class="btn btn-primary" type="submit" onclick="modal.close();">登录</button>
+                        <button class="btn btn-primary" type="submit">登录</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+    <script src="/plugins/layui-v2.5.4/layui/layui.js" charset="utf-8"></script>
+    <script th:if="${session.result != null}">
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.open({
+                title: '注册通知',
+                content: '您已成功注册本社区帐号，快来登录吧',
+                offset: 't'
+            });
+        });
+    </script>
 
     <script type="text/javascript" src="/personage/modoul/dist/rmodal.js"></script>
     <script type="text/javascript">
