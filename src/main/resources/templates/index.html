@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Javacommunity</title>
+
+    <div th:insert="module/head :: style"></div>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="/personage/modoul/dist/rmodal-no-bootstrap.css" type="text/css" />
+</head>
+<body>
+    <div th:insert="module/navHead :: nav"></div>
+
+    <!--模态窗口-->
+    <div id="modal" class="modal">
+        <div class="modal-dialog animated" style="width: 600px;">
+            <div class="modal-content">
+                <form class="form-horizontal" method="get">
+                    <div class="modal-header">
+                        <strong>登录</strong>
+                    </div>
+
+                    <div class="modal-body" style="width: 500px;">
+                        <div class="form-group">
+                            <label for="email" class="control-label col-xs-4">邮箱</label>
+                            <div class="input-group col-xs-7">
+                                <input type="email" name="email" id="email" class="form-control" placeholder="请输入邮箱"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="control-label col-xs-4">密码</label>
+                            <div class="input-group col-xs-7">
+                                <input type="password" name="password" id="password" class="form-control" placeholder="请输入密码"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-default" type="button" onclick="modal.close();">取消</button>
+                        <button class="btn btn-primary" type="submit" onclick="modal.close();">登录</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="/personage/modoul/dist/rmodal.js"></script>
+    <script type="text/javascript">
+        window.onload = function() {
+            var modal = new RModal(document.getElementById('modal'), {
+                beforeOpen: function(next) {
+                    console.log('beforeOpen');
+                    next();
+                }
+                , afterOpen: function() {
+                    console.log('opened');
+                }
+
+                , beforeClose: function(next) {
+                    console.log('beforeClose');
+                    next();
+                }
+                , afterClose: function() {
+                    console.log('closed');
+                }
+            });
+
+            document.addEventListener('keydown', function(ev) {
+                modal.keydown(ev);
+            }, false);
+
+            document.getElementById('showModal').addEventListener("click", function(ev) {
+                ev.preventDefault();
+                modal.open();
+            }, false);
+
+            window.modal = modal;
+        }
+    </script>
+</body>
+</html>
