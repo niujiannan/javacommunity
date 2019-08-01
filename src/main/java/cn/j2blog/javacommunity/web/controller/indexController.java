@@ -17,10 +17,8 @@ public class indexController {
     @GetMapping("/")
     public String index(@RequestParam(name = "currentPage", defaultValue = "1") Integer currentPage,
                         @RequestParam(name = "countRow", defaultValue = "5") Integer countRow, Model model) {
-        PageDto pageDto = new PageDto();
-        pageDto.startRow(currentPage, countRow);
-        model.addAttribute("questionList", questionService.qeustionAll(pageDto));
-        model.addAttribute("pageDto", pageDto);
+        model.addAttribute("questionList", questionService.qeustionAll(currentPage, countRow));
+        model.addAttribute("pageDto", questionService.getPageDto());
         return "index";
     }
 

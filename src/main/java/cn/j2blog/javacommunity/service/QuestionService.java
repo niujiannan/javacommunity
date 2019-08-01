@@ -10,9 +10,11 @@ public interface QuestionService {
 
     void setQuestion(Question question);
 
-    List<QuestionAndUserDto> qeustionAll(PageDto pageDto);
+    List<QuestionAndUserDto> qeustionAll(Integer currentPage, Integer countRow);
 
     QuestionAndUserDto getByIdQuestion(Integer questionId);
 
     void update(Integer questionId, Question question);
+
+    PageDto getPageDto();
 }

@@ -9,6 +9,7 @@ import cn.j2blog.javacommunity.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.*;
 import java.util.List;
 
 @Service
@@ -18,6 +19,8 @@ public class QuestonServiceImpl implements QuestionService {
     private QuestionDao questionDao;
     @Autowired
     private UserDao userDao;
+
+    private PageDto pageDto = new PageDto();
     @Override
     public void setQuestion(Question question) {
         question.setPublishTime(System.currentTimeMillis());
@@ -26,10 +29,8 @@ public class QuestonServiceImpl implements QuestionService {
     }
 
     @Override
-    public List<QuestionAndUserDto> qeustionAll(PageDto pageDto) {
-        if(pageDto.getStartRow() == 0) {
-            pageDto.setCountPage(questionDao.count());
-        }
+    public List<QuestionAndUserDto> qeustionAll(Integer currentPage, Integer countRow) {
+        pageDto.startRow(currentPage, countRow, questionDao.count());
         List<QuestionAndUserDto> questionAndUserDtos = questionDao.questionAll(pageDto);
         for(QuestionAndUserDto questionAndUserDto : questionAndUserDtos) {
             questionAndUserDto.setUser(userDao.getIdUser(questionAndUserDto.getPublisher()));
@@ -52,6 +53,11 @@ public class QuestonServiceImpl implements QuestionService {
         question.setUpdateTime(System.currentTimeMillis());
         question.setId(questionId);
         questionDao.setIdUpdate(question);
+    }
+
+    @Override
+    public PageDto getPageDto() {
+        return this.pageDto;
     }
 
 }
