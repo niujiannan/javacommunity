@@ -32,11 +32,14 @@ public class FormController {
     }
 
     @PostMapping("/login")
-    public String login(User user, HttpServletRequest request, Model model) {
+    public String login(User user,String requestPath, HttpServletRequest request, Model model) {
+        if(requestPath == null) {
+            requestPath = "/";
+        }
         User getUser = userService.getUser(user);
         if(getUser != null) {
             request.getSession().setAttribute("user", getUser);
-            return "redirect:/";
+            return "redirect:" + requestPath;
         }
         model.addAttribute("message", "用户名或密码错误");
         return "/";

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Java社区</title>
+    <div th:insert="module/head :: style"></div>
+    <link rel="stylesheet" href="/plugins/markdown/css/editormd.css" />
+    <link rel="stylesheet" href="https://cdn.bootcss.com/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="/personage/modoul/dist/rmodal-no-bootstrap.css" type="text/css" />
+    <link rel="stylesheet" href="/plugins/layui-v2.5.4/layui/css/layui.css"  media="all">
+</head>
+<body>
+    <div th:insert="module/navHead :: nav"></div>
+    <div class="row" style="margin: 50px 100px; border: 2px solid #f8f8f8">
+        <div class="col-lg-9 col-md-12 col-sm-12">
+            <div class="media">
+                <div class="media-body">
+                    <h4 class="media-heading" th:text="${questionAndUserDto.title}"></h4><br>
+                    <span style="color:#999; font-size:12px;">
+                        浏览：<span th:text="${questionAndUserDto.browseNumber}"></span>
+                        &nbsp;&#8226;&nbsp; 评论：<span th:text="${questionAndUserDto.commentNumber}"></span>
+                        &nbsp;&#8226;&nbsp; 发布时间：<span th:text="${#dates.format(questionAndUserDto.publishTime ,'yyyy-MM-dd HH:mm')}"></span>
+                    </span>
+                    <hr>
+                    <div id="question-markdown-view">
+                        <textarea style="display:none;" th:text="${questionAndUserDto.content}"></textarea>
+                    </div>
+                    <a th:href="${'/user/updata/' + questionAndUserDto.id}" th:if="${session.user != null && session.user.id == questionAndUserDto.user.id}"><span class="glyphicon glyphicon-pencil">编辑</span></a>
+                    <hr>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-12 col-sm-12">
+            <div class="media">
+                <div class="media-left">
+                    <a href="#">
+                        <img width="64px" height="40px" class="media-object" th:src="${questionAndUserDto.user.headPortraitUrl}">
+                    </a>
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading" th:text="${questionAndUserDto.user.nickName}"></h4>
+                </div>
+                <hr>
+            </div>
+
+            <div class="media" style="margin-top: 20px">
+                <div class="media-body" >
+                    <h2 class="media-heading">热门问题</h2>
+                    <hr>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:insert="module/model :: model"></div>
+
+    <script src="/plugins/markdown/editormd.min.js"></script>
+    <script src="/plugins/markdown/lib/marked.min.js"></script>
+    <script src="/plugins/markdown/lib/prettify.min.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            editormd.markdownToHTML("question-markdown-view", {});
+        });
+    </script>
+    <script src="/plugins/layui-v2.5.4/layui/layui.js" charset="utf-8"></script>
+    <script th:if="${session.msg != null}">
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.msg('修改成功', {
+                icon: 1,
+                time: 2000
+            });
+        });
+    </script>
+</body>
+</html>

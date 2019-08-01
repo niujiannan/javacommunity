@@ -18,9 +18,32 @@
                 <div class="media-body" >
                     <h2 class="media-heading"><span class="glyphicon glyphicon-th-list"></span> 问题</h2>
                     <hr>
-
+                    <div class="media" th:each="questionAndUser : ${questionList}">
+                        <div class="media-left">
+                            <a href="#">
+                                <img width="64px" height="40px" class="media-object" th:src="${questionAndUser.user.headPortraitUrl}">
+                            </a>
+                        </div>
+                        <div class="media-body">
+                            <h4 class="media-heading"><a th:href="${'/question/' + questionAndUser.id}" th:text="${questionAndUser.title}"></a></h4>
+                            <br>
+                            <br>
+                            <span style="color:#999; font-size:12px;">
+                                浏览：<span th:text="${questionAndUser.browseNumber}"></span>
+                                &nbsp;&#8226;&nbsp; 评论：<span th:text="${questionAndUser.commentNumber}"></span>
+                                &nbsp;&#8226;&nbsp; 发布时间：<span th:text="${#dates.format(questionAndUser.publishTime ,'yyyy-MM-dd HH:mm')}"></span>
+                            </span>
+                        </div>
+                        <hr>
+                    </div>
                 </div>
             </div>
+
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li th:each="i : ${#numbers.sequence(1, pageDto.countPage)}"><a th:href="@{/(page=${i})}" th:text="${i}"></a></li>
+                </ul>
+            </nav>
         </div>
         <div class="col-md-3">
             <div class="media" style="margin-top: 20px">

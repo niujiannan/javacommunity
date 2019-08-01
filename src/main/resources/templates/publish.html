@@ -2,9 +2,10 @@
 <html lang="en"  xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>发布</title>
+    <title>Java社区</title>
     <div th:insert="module/head :: style"></div>
     <link rel="stylesheet" href="/plugins/markdown/css/editormd.css" />
+    <link rel="stylesheet" href="/plugins/layui-v2.5.4/layui/css/layui.css"  media="all">
 </head>
 <body>
     <div th:insert="module/navHead :: nav"></div>
@@ -17,15 +18,17 @@
                         <hr>
                         <div class="form-group">
                             <label for="title">标题</label>
-                            <input type="text" class="form-control" id="title" placeholder="请输入问题标题">
+                            <input type="hidden" name="publisher" th:value="${session.user.id}">
+                            <input type="hidden" name="questionId" th:value="${questionAndUserDto != null ? questionAndUserDto.id : ''}">
+                            <input type="text" class="form-control" th:value="${questionAndUserDto != null ? questionAndUserDto.title :  ''}" name="title" id="title" placeholder="请输入问题标题">
                         </div>
 
                         <div class="form-group" id="question-editor">
-                            <textarea class="form-control" id="description" name="desciption" style="display:none;"></textarea>
+                            <textarea class="form-control" name="content" id="description" style="display:none;" th:text="${questionAndUserDto != null ? questionAndUserDto.content : ''}"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="label">标签</label>
-                            <input type="text" class="form-control" id="label" placeholder="请输入所属标签">
+                            <input type="text" class="form-control" id="label" name="labels" th:value="${questionAndUserDto != null ? questionAndUserDto.labels : ''}" placeholder="请输入所属标签">
                         </div>
                         <button type="submit" class="btn btn-success">发布</button>
                     </div>
@@ -57,6 +60,16 @@
                 delay : 0,
                 watch : false,
                 placeholder : "问题补充（必填，请参照提示）"
+            });
+        });
+    </script>
+    <script src="/plugins/layui-v2.5.4/layui/layui.js" charset="utf-8"></script>
+    <script th:if="${msg != null}">
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.msg('发布成功', {
+                icon: 1,
+                time: 2000
             });
         });
     </script>

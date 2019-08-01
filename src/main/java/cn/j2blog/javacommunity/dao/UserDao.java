@@ -12,4 +12,7 @@ public interface UserDao {
 
     @Select("select id, nick_name, password, email, head_portrait_url, create_time from users where email = #{email}")
     User getUser(String email);
+
+    @Select("select id, nick_name, password, email, head_portrait_url, create_time from users where id = #{publisherId}")
+    User getIdUser(Integer publisherId);
 }

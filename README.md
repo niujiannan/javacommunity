@@ -50,4 +50,22 @@ create table question(
     update_time bigint comment '修改时间'
 );
 ```
+
++ 回复表
+```sql
+create table comment
+(
+	id int(11) auto_increment,
+	content varchar(1000) comment '评论内容',
+	parent_id int(11) not null comment '父类id',
+	type int(11) null comment '父类类型',
+	commentator int(11) null comment '评论人的id',
+	create_time bigint null comment '创建时间',
+	update_time bigint null comment '更新时间',
+	like_number int(11) default 0 null comment '点赞数',
+	constraint comment_pk
+		primary key (id)
+);
+
+```
 ...待续
