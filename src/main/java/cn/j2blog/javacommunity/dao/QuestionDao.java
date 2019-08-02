@@ -32,4 +32,10 @@ public interface QuestionDao {
 
     @Select("select count(1) from question")
     Integer count();
+
+    @Update("update question set comment_number = #{number} where id = #{questionId}")
+    void updateComment(@Param("questionId") Integer questinId, @Param("number") Integer number);
+
+    @Select("select comment_number from question where id = #{questionId}")
+    Integer selectCommentNumber(Integer questionId);
 }

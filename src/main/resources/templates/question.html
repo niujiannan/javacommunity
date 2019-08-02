@@ -12,7 +12,7 @@
 <body>
     <div th:insert="module/navHead :: nav"></div>
     <div class="row" style="margin: 50px 100px; border: 2px solid #f8f8f8">
-        <div class="col-lg-9 col-md-12 col-sm-12">
+        <div class="col-lg-9 col-md-12 col-sm-12" style="margin-bottom: 10px;">
             <div class="media">
                 <div class="media-body">
                     <h4 class="media-heading" th:text="${questionAndUserDto.title}"></h4><br>
@@ -27,6 +27,46 @@
                     </div>
                     <a th:href="${'/user/updata/' + questionAndUserDto.id}" th:if="${session.user != null && session.user.id == questionAndUserDto.user.id}"><span class="glyphicon glyphicon-pencil">编辑</span></a>
                     <hr>
+                    <h2>评论</h2><br>
+                    <div id="ajaxResult">
+                        <div class="media" th:each="commentDto : ${commentDtoList}">
+                            <div class="media-left">
+                                <a href="#">
+                                    <img width="64px" height="40px" class="media-object" th:src="${commentDto.user.headPortraitUrl}">
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading" th:text="${commentDto.user.nickName}"></h4>
+                                <div th:text="${commentDto.content}"></div><br>
+                                <span style="color:#999; font-size:12px;">
+                                <a href="#" class="glyphicon glyphicon-thumbs-up" style="font-size: 14px; color: #777;"></a>&nbsp;&nbsp;&nbsp;
+                                <a href="#" class="glyphicon glyphicon-thumbs-down" style="font-size: 14px; color: #777"></a>&nbsp;&nbsp;&nbsp;
+                                <a href="#" class="glyphicon glyphicon-comment" style="font-size: 16px; color: #777;"></a>
+                                <span th:text="${#dates.format(commentDto.createTime ,'yyyy-MM-dd HH:mm')}" style="float:right;"></span>
+                            </span>
+                            </div>
+                            <hr>
+                        </div>
+                    </div>
+
+                    <hr>
+                    <input type="hidden" id="questionId" th:value="${questionAndUserDto.id}">
+                    <div th:if="${session.user != null}"><input type="hidden" id="userId" th:value="${session.user.id}"></div>
+                    <div class="media" style="margin-top: 20px;">
+                        <div class="media-left" th:if="${session.user != null}">
+                            <a href="#">
+                                <img class="media-object" width="60px" height="40px" style="padding-top: 14px;" th:src="${session.user.headPortraitUrl}">
+                            </a>
+                        </div>
+                        <div class="media-body">
+                            <h4 class="media-heading" th:if="${session.user != null}" ><span th:text="${session.user.nickName}"></span></h4>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 10px;">
+                        <textarea class="form-control" id="commentContent" rows="3"></textarea><br>
+                        <button type="button" id="submit" class="btn btn-success" style="float: right; margin-top: 10px;">评论</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -58,9 +98,48 @@
     <script src="/plugins/markdown/editormd.min.js"></script>
     <script src="/plugins/markdown/lib/marked.min.js"></script>
     <script src="/plugins/markdown/lib/prettify.min.js"></script>
+    <script src="/personage/js/dateFormetUtil.js"></script>
     <script type="text/javascript">
         $(function() {
             editormd.markdownToHTML("question-markdown-view", {});
+
+            $("#submit").on("click", function () {
+                $.ajax({
+                    url: "/comment",
+                    type: "post",
+                    contentType: "application/json;charset=UTF-8",
+                    data: JSON.stringify({
+                        type: 1,
+                        commentId: $("#userId").val(),
+                        questionId: $("#questionId").val(),
+                        content: $("#commentContent").val()
+                    }),
+                    dataType: "json",
+                    success: function (result) {
+                        var htmls = '<div class="media">\n' +
+                            '                        <div class="media-left">\n' +
+                            '                            <a href="#">\n' +
+                            '                                <img width="64px" height="40px" class="media-object" src='+ result.user.headPortraitUrl +'>\n' +
+                            '                            </a>\n' +
+                            '                        </div>\n' +
+                            '                        <div class="media-body">\n' +
+                            '                            <h4 class="media-heading">'+ result.user.nickName +'</h4>\n' +
+                            '                            <div>'+ result.content +'</div><br>\n' +
+                            '                            <span style="color:#999; font-size:12px;">\n' +
+                            '                                <a href="#" class="glyphicon glyphicon-thumbs-up" style="font-size: 14px; color: #777;"></a>&nbsp;&nbsp;&nbsp;\n' +
+                            '                                <a href="#" class="glyphicon glyphicon-thumbs-down" style="font-size: 14px; color: #777"></a>&nbsp;&nbsp;&nbsp;\n' +
+                            '                                <a href="#" class="glyphicon glyphicon-comment" style="font-size: 16px; color: #777;"></a>\n' +
+                            '                                <span style="float:right;">'+ datetimeFormat(result.createTime) +'</span>\n' +
+                            '                            </span>\n' +
+                            '                        </div>\n' +
+                            '                        <hr>\n' +
+                            '                    </div>';
+                        $("#ajaxResult").append(htmls);
+                    }
+                })
+            });
+
+
         });
     </script>
     <script src="/plugins/layui-v2.5.4/layui/layui.js" charset="utf-8"></script>
@@ -73,5 +152,7 @@
             });
         });
     </script>
+
+
 </body>
 </html>
